@@ -1,13 +1,14 @@
-import { authOptions } from "@/lib/auth";
+import { auth } from "@/lib/auth";
 import { dbConnect } from "@/lib/db";
 import User from "@/models/User";
 import { UserPublic } from "@/types/UserPublic";
-import getServerSession from "next-auth";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(req: NextRequest) {
+  console.log("User registration request received");
   try {
     const { name, email, password } = await req.json();
+    console.log("Registering user:", { name, email });
     if (!email || !password) {
       return NextResponse.json(
         { message: "Email and password are required" },
@@ -40,7 +41,7 @@ export async function POST(req: NextRequest) {
   }
 }
 export async function GET(req: NextRequest) {
-  const session = await getServerSession(authOptions);
+  const session = await auth();
   const uid = req.nextUrl.searchParams.get("uid");
 
   if (!uid) {
@@ -53,7 +54,7 @@ export async function GET(req: NextRequest) {
   try {
     await dbConnect();
     // console.log(connected);
-    if (uid === session.auth.name) {
+    if (uid === session?.user?.id) {
       const user = await User.findById(uid);
       // console.log("user:" + user);
       return NextResponse.json(user, { status: 200 });

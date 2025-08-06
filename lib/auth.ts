@@ -1,29 +1,28 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import User from "@/models/User";
 import bcrypt from "bcryptjs";
-import { NextAuthOptions } from "next-auth";
-import CredentialsProvider from "next-auth/providers/credentials";
+import NextAuth from "next-auth";
+import Credentials from "next-auth/providers/credentials";
 import Google from "next-auth/providers/google";
 import { dbConnect } from "./db";
 
-export const authOptions: NextAuthOptions = {
+export const { handlers, signIn, signOut, auth } = NextAuth({
   providers: [
     Google({
       clientId: process.env.GOOGLE_CLIENT_ID!,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
     }),
-    CredentialsProvider({
-      name: "Credentials",
+    Credentials({
       credentials: {
         email: { label: "email", type: "text" },
         password: { label: "password", type: "password" },
       },
       async authorize(credentials) {
+        let user = null;
         console.log(credentials);
         if (!credentials) {
           throw new Error("Missing email or password.");
         }
-
         try {
           await dbConnect();
           const user = await User.findOne({ email: credentials.email });
@@ -31,11 +30,9 @@ export const authOptions: NextAuthOptions = {
           if (!user) {
             throw new Error("Please register first!");
           }
-
-          const validUser = await bcrypt.compare(
-            credentials.password,
-            user.password
-          );
+          // user = await getUserFromDb(email, pwHash);
+          const secret = credentials.password!.toString();
+          const validUser = await bcrypt.compare(secret, user.password);
           if (!validUser) {
             throw new Error("Please provide right credentials.");
           }
@@ -52,10 +49,10 @@ export const authOptions: NextAuthOptions = {
   ],
   callbacks: {
     async signIn({ user, account, profile }) {
-      console.log("--- [signIn Callback] Debug ---");
-      console.log("User object from provider/authorize:", user);
-      console.log("Account object:", account);
-      console.log("Profile object (raw from OAuth provider):", profile);
+      // console.log("--- [signIn Callback] Debug ---");
+      // console.log("User object from provider/authorize:", user);
+      // console.log("Account object:", account);
+      // console.log("Profile object (raw from OAuth provider):", profile);
 
       await dbConnect(); // Ensure DB connection is established
 
@@ -165,4 +162,4 @@ export const authOptions: NextAuthOptions = {
     maxAge: 30 * 24 * 60 * 60,
   },
   secret: process.env.NEXTAUTH_SECRET,
-};
+});

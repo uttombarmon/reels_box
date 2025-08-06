@@ -1,11 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 // app/api/videos/route.ts (or pages/api/videos.ts if you're mixing App and Pages Router)
 
-import { authOptions } from "@/lib/auth"; // Assuming this path is correct for your Next-Auth configuration
+import { auth } from "@/lib/auth"; // Assuming this path is correct for your Next-Auth configuration
 import { dbConnect } from "@/lib/db"; // Assuming this path is correct for your MongoDB connection
 import Video from "@/models/Video"; // Assuming this path is correct for your Mongoose Video model
 import { VideoInterface } from "@/types/VTypes"; // Assuming this path is correct for your VideoInterface type
-import getServerSession from "next-auth";
 import { NextRequest, NextResponse } from "next/server";
 
 const DEFAULT_LIMIT = 10;
@@ -69,8 +68,8 @@ export async function GET(req: NextRequest) {
 export async function POST(request: NextRequest) {
   try {
     // Authenticate the session using Next-Auth
-    const session = await getServerSession(authOptions);
-    if (!session || !session?.auth?.name || !session?.auth?.name) {
+    const session = await auth();
+    if (!session || !session?.user?.id || !session?.user?.id) {
       // Ensure user and user.id exist
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
@@ -94,7 +93,7 @@ export async function POST(request: NextRequest) {
     // Construct video data, including userId from the session
     const videoData = {
       ...body,
-      userId: session?.auth?.name, // Assign the authenticated user's ID
+      userId: session?.user?.id, // Assign the authenticated user's ID
       control: true, // Default 'control' to true if not provided
       transformation: {
         height: body.transformation?.height ?? 1920,
