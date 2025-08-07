@@ -7,6 +7,7 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
+  SidebarTrigger,
 } from "@/components/ui/sidebar";
 import {
   Compass,
@@ -59,6 +60,9 @@ const items = [
 const NavViewXL = () => {
   return (
     <Sidebar collapsible="icon">
+      <div className=" w-full flex justify-end">
+        <SidebarTrigger />
+      </div>
       <SidebarContent>
         <SidebarGroup>
           <SidebarGroupLabel>REELSBOX</SidebarGroupLabel>

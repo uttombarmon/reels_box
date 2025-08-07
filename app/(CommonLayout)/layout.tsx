@@ -1,5 +1,6 @@
 import NavViewXL from "@/components/custom/navbars/NavViewXL";
-import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
+import FileHandleProvider from "@/components/custom/providers/ImageKitProvider";
+import { SidebarProvider } from "@/components/ui/sidebar";
 
 export default function CommonLayout({
   children,
@@ -7,14 +8,13 @@ export default function CommonLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <SidebarProvider>
+    <SidebarProvider className=" w-screen flex flex-1 shrink">
       {/* mobile view */}
       {/* <NavViewM /> */}
       {/* desktop view */}
       <NavViewXL />
-      <main>
-        <SidebarTrigger />
-        {children}
+      <main className=" w-full md:w-[calc(100%-16rem) flex justify-center">
+        <FileHandleProvider>{children}</FileHandleProvider>
       </main>
     </SidebarProvider>
   );
