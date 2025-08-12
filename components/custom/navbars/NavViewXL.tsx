@@ -1,4 +1,9 @@
 import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import {
   Sidebar,
   SidebarContent,
   SidebarGroup,
@@ -13,23 +18,19 @@ import {
   Compass,
   Home,
   Inbox,
-  Search,
+  SearchIcon,
   Settings,
   User,
   Users,
 } from "lucide-react";
 import Link from "next/link";
+import SearchInput from "./Search";
 
 const items = [
   {
     title: "Home",
-    url: "#",
+    url: "/",
     icon: Home,
-  },
-  {
-    title: "Search",
-    url: "#",
-    icon: Search,
   },
   {
     title: "Trending",
@@ -66,12 +67,22 @@ const NavViewXL = () => {
       <SidebarContent>
         <SidebarGroup>
           <SidebarGroupLabel>REELSBOX</SidebarGroupLabel>
+          <div className=" px-2 my-4 text-2xl w-full">
+            <Popover>
+              <PopoverTrigger className=" flex justify-start w-[16rem] gap-2 items-center">
+                <SearchIcon /> Search
+              </PopoverTrigger>
+              <PopoverContent className=" ">
+                <SearchInput />
+              </PopoverContent>
+            </Popover>
+          </div>
           <SidebarGroupContent>
             <SidebarMenu>
               {items.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton size={"xl"} asChild>
-                    <Link href={item.url} className=" text-2xl">
+                    <Link href={item.url ?? "#"} className=" text-2xl">
                       <item.icon />
                       <span>{item.title}</span>
                     </Link>

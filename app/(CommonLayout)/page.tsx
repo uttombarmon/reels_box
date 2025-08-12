@@ -73,7 +73,7 @@ export default function Home() {
         {videos.length > 0 ? (
           <div
             ref={containerRef}
-            className="relative w-full min-w-sm md:min-w-md h-screen md:h-[95vh] rounded-lg overflow-y-scroll snap-y snap-mandatory shadow-lg hide-scrollbar"
+            className="relative w-full min-w-sm md:min-w-md h-screen rounded-lg overflow-y-scroll snap-y snap-mandatory shadow-lg hide-scrollbar"
           >
             {videos.map((video, index) => (
               <VideoCard
