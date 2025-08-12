@@ -18,7 +18,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         password: { label: "password", type: "password" },
       },
       async authorize(credentials) {
-        let user = null;
+        const user = null;
         console.log(credentials);
         if (!credentials) {
           throw new Error("Missing email or password.");

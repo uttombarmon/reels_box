@@ -7,7 +7,6 @@ if (!mongodbUri) {
 }
 
 declare global {
-  // eslint-disable-next-line no-var
   var mongoose: { conn: any; promise: Promise<any> | null } | undefined;
 }
 
@@ -18,7 +17,6 @@ if (!cached) {
 }
 
 export async function dbConnect() {
-  console.log("Connecting to MongoDB...");
   if (cached?.conn) {
     // console.log("====================================");
     // console.log(cached);
