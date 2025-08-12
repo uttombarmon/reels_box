@@ -46,12 +46,12 @@ function RegisterForm() {
     }
   };
   return (
-    <div className="bg-white p-8 rounded-2xl shadow-2xl w-full max-w-md lg:max-w-lg transform transition-all duration-300 hover:scale-105 mt-8 lg:mt-0 lg:ml-8">
+    <div className=" p-8 rounded-2xl w-full max-w-md lg:max-w-lg mt-8 lg:mt-0 lg:ml-8">
       <div className="text-center mb-8">
-        <h1 className="text-4xl font-extrabold text-gray-300 mb-3">
+        <h1 className="text-4xl font-extrabold dark:text-gray-300 text-gray-800 mb-3">
           Join Reels Box!
         </h1>
-        <p className="text-lg text-gray-600">
+        <p className="text-lg text-gray-500">
           Create your free account to start sharing and discovering amazing
           short videos.
         </p>
@@ -81,7 +81,7 @@ function RegisterForm() {
         <div>
           <label
             htmlFor="name"
-            className="block text-sm font-medium text-gray-700 mb-1"
+            className="block text-sm font-medium text-gray-500 mb-1"
           >
             Full Name
           </label>
@@ -91,7 +91,7 @@ function RegisterForm() {
             name="name"
             value={name}
             onChange={(e) => setName(e.target.value)}
-            className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-xs focus:outline-hidden focus:ring-pink-500 focus:border-pink-500 text-gray-300"
+            className="mt-1 block w-full px-4 py-2 border border-gray-700 dark:border-gray-300 rounded-lg shadow-xs focus:outline-hidden focus:ring-blue-500 focus:border-blue-500 dark:text-gray-300"
             placeholder="John Doe"
             required
             disabled={loading}
@@ -100,7 +100,7 @@ function RegisterForm() {
         <div>
           <label
             htmlFor="email"
-            className="block text-sm font-medium text-gray-700 mb-1"
+            className="block text-sm font-medium text-gray-500 mb-1"
           >
             Email Address
           </label>
@@ -110,7 +110,7 @@ function RegisterForm() {
             name="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-xs focus:outline-hidden focus:ring-pink-500 focus:border-pink-500 text-gray-300"
+            className="mt-1 block w-full px-4 py-2 border border-gray-700 dark:border-gray-300 rounded-lg shadow-xs focus:outline-hidden focus:ring-blue-500 focus:border-blue-500 dark:text-gray-300"
             placeholder="your.email@example.com"
             required
             disabled={loading}
@@ -119,7 +119,7 @@ function RegisterForm() {
         <div>
           <label
             htmlFor="password"
-            className="block text-sm font-medium text-gray-700 mb-1"
+            className="block text-sm font-medium text-gray-500 mb-1"
           >
             Password
           </label>
@@ -129,7 +129,7 @@ function RegisterForm() {
             name="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-xs focus:outline-hidden focus:ring-pink-500 focus:border-pink-500 text-gray-300"
+            className="mt-1 block w-full px-4 py-2 border border-gray-700 dark:border-gray-300 rounded-lg shadow-xs focus:outline-hidden focus:ring-pink-500 focus:border-blue-500 dark:text-gray-300"
             placeholder="••••••••"
             required
             disabled={loading}
@@ -138,7 +138,7 @@ function RegisterForm() {
 
         <button
           type="submit"
-          className="w-full flex justify-center items-center py-3 px-4 border border-transparent rounded-lg shadow-lg text-lg font-semibold text-white bg-pink-600 hover:bg-pink-700 focus:outline-hidden focus:ring-2 focus:ring-offset-2 focus:ring-pink-500 transition-colors duration-300"
+          className="w-full flex justify-center items-center py-3 px-4 border border-transparent rounded-lg shadow-lg text-lg font-semibold dark:text-white text-black bg-blue-600 hover:bg-blue-700 focus:outline-hidden focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-300"
           disabled={loading}
         >
           {loading ? (
@@ -170,7 +170,7 @@ function RegisterForm() {
         Already have an account?{" "}
         <a
           href="/login"
-          className="font-semibold text-pink-600 hover:text-pink-500 transition-colors duration-200"
+          className="font-semibold text-blue-600 hover:text-blue-500 underline transition-colors duration-200"
         >
           Sign In
         </a>

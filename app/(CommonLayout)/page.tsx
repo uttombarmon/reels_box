@@ -1,19 +1,46 @@
 "use client";
+
+import VideoSkeleton from "@/components/custom/skeleton/Video";
 import { VideoCard } from "@/components/custom/video/Video";
-import { ModeToggle } from "@/components/shared/ThemeChange";
+import { apiClient } from "@/lib/ClientApi";
+import { VideoInterface } from "@/types/VTypes";
 import { useEffect, useRef, useState } from "react";
 
 export default function Home() {
-  const [activeVideoIndex, setActiveVideoIndex] = useState(0);
+  const [videos, setVideos] = useState<VideoInterface[]>([]);
+  const [page, setPage] = useState<number>(0);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [hasMore, setHasMore] = useState<boolean>(true);
+  const [activeVideoIndex, setActiveVideoIndex] = useState<number>(0);
   const containerRef = useRef<HTMLDivElement>(null);
 
-  // Handle scroll events to detect which video is in view
+  // function to fetch videos
+  const fetchMoreVideos = async () => {
+    if (loading || !hasMore) return;
+    setLoading(true);
+    const newVideos: VideoInterface[] = await apiClient.GetVideos(page);
+    if (newVideos.length === 0) {
+      setHasMore(false);
+    } else {
+      setVideos((prevVideos) => [...prevVideos, ...newVideos]);
+      setPage((prevPage) => prevPage + 1);
+    }
+  };
+
+  useEffect(() => {
+    fetchMoreVideos();
+  }, []);
+  //handle scroll
   const handleScroll = () => {
-    if (containerRef.current) {
-      const scrollPosition = containerRef.current.scrollTop;
-      const windowHeight = window.innerHeight;
-      const newActiveIndex = Math.round(scrollPosition / windowHeight);
-      setActiveVideoIndex(newActiveIndex);
+    if (!containerRef.current) return;
+
+    const { scrollTop, clientHeight, scrollHeight } = containerRef.current;
+
+    const newActiveIndex = Math.round(scrollTop / clientHeight);
+    setActiveVideoIndex(newActiveIndex);
+
+    if (scrollTop + clientHeight >= scrollHeight - 300) {
+      // fetchMoreVideos();
     }
   };
 
@@ -23,101 +50,59 @@ export default function Home() {
       container.addEventListener("scroll", handleScroll);
       return () => container.removeEventListener("scroll", handleScroll);
     }
-  }, []);
-  const MOCK_VIDEOS = [
-    {
-      id: 1,
-      videoUrl:
-        "https://cdn.glitch.me/c7f66710-f1d2-45e0-8197-28d11d13f9c3/short-video-1.mp4",
-      title: "Beautiful scenery",
-      user: {
-        name: "Traveler123",
-        avatar: "https://placehold.co/40x40/000000/FFFFFF?text=T",
-      },
-      stats: {
-        likes: 1245,
-        comments: 32,
-        shares: 15,
-      },
-    },
-    {
-      id: 2,
-      videoUrl:
-        "https://cdn.glitch.me/c7f66710-f1d2-45e0-8197-28d11d13f9c3/short-video-2.mp4",
-      title: "Coding is fun!",
-      user: {
-        name: "DevGuru",
-        avatar: "https://placehold.co/40x40/000000/FFFFFF?text=D",
-      },
-      stats: {
-        likes: 5678,
-        comments: 145,
-        shares: 89,
-      },
-    },
-    {
-      id: 3,
-      videoUrl:
-        "https://cdn.glitch.me/c7f66710-f1d2-45e0-8197-28d11d13f9c3/short-video-3.mp4",
-      title: "Workout motivation",
-      user: {
-        name: "FitnessPro",
-        avatar: "https://placehold.co/40x40/000000/FFFFFF?text=F",
-      },
-      stats: {
-        likes: 987,
-        comments: 50,
-        shares: 10,
-      },
-    },
-    {
-      id: 4,
-      videoUrl:
-        "https://cdn.glitch.me/c7f66710-f1d2-45e0-8197-28d11d13f9c3/short-video-4.mp4",
-      title: "Artistic creation",
-      user: {
-        name: "ArtisticSoul",
-        avatar: "https://placehold.co/40x40/000000/FFFFFF?text=A",
-      },
-      stats: {
-        likes: 2345,
-        comments: 78,
-        shares: 20,
-      },
-    },
-    {
-      id: 5,
-      videoUrl:
-        "https://cdn.glitch.me/c7f66710-f1d2-45e0-8197-28d11d13f9c3/short-video-5.mp4",
-      title: "Delicious recipe",
-      user: {
-        name: "FoodieCorner",
-        avatar: "https://placehold.co/40x40/000000/FFFFFF?text=F",
-      },
-      stats: {
-        likes: 7890,
-        comments: 201,
-        shares: 105,
-      },
-    },
-  ];
+  }, [loading, hasMore]);
+
   return (
-    <div className=" min-h-screen w-full flex items-center justify-center relative">
-      <div
-        ref={containerRef}
-        className="relative w-full max-w-sm h-screen snap-y snap-mandatory bg-black shadow-lg"
-      >
-        {MOCK_VIDEOS.map((video, index) => (
-          <VideoCard
-            key={video.id}
-            video={video}
-            isActive={index === activeVideoIndex}
-          />
-        ))}
-      </div>
-      <div className=" absolute top-4 right-4 w-fit">
-        <ModeToggle />
-      </div>
+    <div className="font-sans antialiased text-gray-800 ">
+      <style jsx global>{`
+        @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap");
+        body {
+          font-family: "Inter", sans-serif;
+        }
+
+        /* Hide scrollbar for the container */
+        .hide-scrollbar {
+          -ms-overflow-style: none; /* IE and Edge */
+          scrollbar-width: none; /* Firefox */
+        }
+        .hide-scrollbar::-webkit-scrollbar {
+          display: none; /* Chrome, Safari, and Opera */
+        }
+      `}</style>
+      <main className="min-h-screen w-full flex items-center justify-center ">
+        {videos.length > 0 ? (
+          <div
+            ref={containerRef}
+            className="relative w-full min-w-sm md:min-w-md h-screen md:h-[95vh] rounded-lg overflow-y-scroll snap-y snap-mandatory shadow-lg hide-scrollbar"
+          >
+            {videos.map((video, index) => (
+              <VideoCard
+                key={String(video?.title)}
+                video={video}
+                isActive={index === activeVideoIndex}
+              />
+            ))}
+
+            {/* Loading indicator */}
+            {loading && (
+              <div className="flex items-center justify-center h-20 text-gray-700 dark:text-white animate-pulse">
+                Loading...
+              </div>
+            )}
+
+            {/* "No more content" message */}
+            {!hasMore && !loading && videos.length > 0 && (
+              <div className="flex items-center justify-center h-20 dark:text-gray-400 text-gray-700">
+                You've reached the end!
+              </div>
+            )}
+          </div>
+        ) : (
+          <div className="flex w-full items-center justify-center h-20 dark:text-gray-400 text-gray-700">
+            <VideoSkeleton />
+          </div>
+        )}
+      </main>
     </div>
   );
 }

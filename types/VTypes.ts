@@ -12,7 +12,7 @@ export interface VideoInterface extends Document {
   duration?: number;
   views: number;
   likes: mongoose.Types.ObjectId[];
-  commentsCount: number;
+  commentsCount: mongoose.Types.ObjectId[];
   transformation?: {
     width?: number;
     height?: number;

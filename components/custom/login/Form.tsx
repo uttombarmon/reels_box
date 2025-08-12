@@ -92,7 +92,7 @@ function Form() {
             </Button>
           </CardFooter>
         </Card> */}
-        <div className="w-full max-w-md p-8 space-y-6 rounded-xl shadow-2xl">
+        <div className="w-full max-w-md space-y-6 rounded-xl">
           <h2 className="text-3xl font-extrabold text-center text-gray-900 dark:text-gray-400">
             Welcome Back!
           </h2>
@@ -159,22 +159,24 @@ function Form() {
         </div>
         {/* forget password */}
         <div className=" w-full flex justify-center">
-          <a className="link link-hover dark:text-gray-300 text-gray-500">
+          <a className="link link-hover underline dark:text-gray-300 text-gray-700 hover:text-blue-500">
             Forgot password?
           </a>
         </div>
         {/* register option */}
         <div className=" w-full flex justify-center">
-          <p className=" dark:text-gray-300 text-gray-500">
+          <p className=" dark:text-gray-300 text-gray-600">
             Don&apos;t have account?{" "}
-            <Link href={"/register"} className=" text-blue-700 underline">
-              regsiter now
+            <Link href={"/register"} className="hover:text-blue-400 underline">
+              Regsiter now
             </Link>
           </p>
         </div>
         {/* Social Login Buttons */}
-        <div className="mt-6 text-center h-fit self-center">
-          <p className="text-gray-500 mb-3">Or sign in with:</p>
+        <div className="text-center h-fit self-center">
+          <p className="text-gray-700 dark:text-gray-400 mb-3">
+            Or sign in with:
+          </p>
           <div className="flex justify-center gap-4">
             {/* Google Login Button */}
             <button

@@ -1,5 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { GetVideosInterface } from "@/types/GetVideosTypes";
+import { ReelsUserI } from "@/types/ReelsUser";
+import { UserPublic } from "@/types/UserPublic";
+import { UserInterface } from "@/types/UTypes";
 import { VideoInterface } from "@/types/VTypes";
 
 type VideoFormData = Omit<VideoInterface, "_id">;
@@ -33,8 +35,21 @@ class ApiClient {
 
     return response.json();
   }
+  async GetAUser(
+    uid: string,
+    post: boolean = false,
+    publicPost: boolean = false
+  ) {
+    if (post) {
+      return this.myFetch<ReelsUserI>(`/auth/user?uid=${uid}&post=${post}`);
+    }
+    if (publicPost) {
+      return this.myFetch<UserPublic>(`/auth/user?uid=${uid}&public=true`);
+    }
+    return this.myFetch<UserInterface>(`/auth/user?uid=${uid}`);
+  }
   async GetVideos(limit: number) {
-    return this.myFetch<GetVideosInterface>(`/videos?limit=${limit}`);
+    return this.myFetch<VideoInterface[]>(`/videos?limit=${limit}`);
   }
   async GetAVideo(id: string) {
     return this.myFetch<VideoInterface>(`/videos/${id}`);

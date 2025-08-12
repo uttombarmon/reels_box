@@ -15,46 +15,36 @@ export async function GET(req: NextRequest) {
     await dbConnect(); // Ensure database connection is established
 
     // Access query parameters using req.nextUrl.searchParams
-    const category = req.nextUrl.searchParams.get("category");
-    const skipParam = req.nextUrl.searchParams.get("skip");
+    // const category = req.nextUrl.searchParams.get("category");
+    // const skipParam = req.nextUrl.searchParams.get("skip");
     const limitParam = req.nextUrl.searchParams.get("limit");
 
     // Parse skip and limit parameters to integers, with fallbacks
-    const skip = parseInt(skipParam || "0", 10);
-    const limit = parseInt(limitParam || DEFAULT_LIMIT.toString(), 10);
+    // const skip = parseInt(limit || "0", 10);
+    const limit = parseInt(limitParam || DEFAULT_LIMIT.toString(), 5);
 
     // Build the query object based on provided parameters
-    const query: Record<string, unknown> = {};
-    if (category) {
-      query.category = category;
-    }
+    // const query: Record<string, unknown> = {};
+    // if (category) {
+    //   query.category = category;
+    // }
 
     // Get the total count of documents matching the query
-    const totalCount = await Video.countDocuments(query);
+    const totalCount = await Video.countDocuments({});
 
     // Fetch videos with sorting, limit, and skip for pagination
-    const videos = await Video.find(query)
+    const videos = await Video.find()
       .sort({ createdAt: -1 }) // Assuming 'createdAt' is the field for creation date
-      .limit(limit)
-      .skip(skip);
+      .limit(5)
+      .skip(limit)
+      .populate("likes");
+    console.log(videos);
 
     // Calculate if there are more videos to fetch
-    const hasMore = skip + videos.length < totalCount;
+    // const hasMore = skip + videos.length < totalCount;
 
     // Return the videos along with pagination metadata
-    return NextResponse.json(
-      {
-        videos: videos,
-        pagination: {
-          totalCount,
-          currentPageItems: videos.length,
-          limit,
-          skip,
-          hasMore,
-        },
-      },
-      { status: 200 }
-    );
+    return NextResponse.json(videos, { status: 200 });
   } catch (error: any) {
     // Use 'any' for error type if not strictly typed
     console.error("Error fetching videos:", error);

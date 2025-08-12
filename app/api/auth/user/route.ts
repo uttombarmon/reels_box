@@ -48,19 +48,21 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ error: "User ID is required" }, { status: 400 });
   }
   const post = req.nextUrl.searchParams.get("post");
+  console.log("Post parameter:", post);
+
   const publicparams = req.nextUrl.searchParams.get("public") || undefined;
 
   // console.log(uid);
   try {
     await dbConnect();
     // console.log(connected);
-    if (uid === session?.user?.id) {
-      const user = await User.findById(uid);
-      // console.log("user:" + user);
-      return NextResponse.json(user, { status: 200 });
-    }
-    if (post === "true") {
-      const user = await User.findById(uid).select("name image username bio");
+    if (post) {
+      console.log("Fetching user with posts");
+      const user = await User.findById(uid).select({
+        password: 0,
+        following: 0,
+        likes: 0,
+      });
       if (!user) {
         return NextResponse.json({ error: "User not found" }, { status: 404 });
       }
@@ -82,6 +84,10 @@ export async function GET(req: NextRequest) {
         followers: user_data.follower?.length || 0,
         likes: user_data.like?.length || 0,
       };
+      return NextResponse.json(user, { status: 200 });
+    }
+    if (uid === session?.user?.id) {
+      const user = await User.findById(uid);
       return NextResponse.json(user, { status: 200 });
     }
   } catch (error) {
