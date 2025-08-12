@@ -132,7 +132,7 @@ export const VideoCard: React.FC<VideoCardProps> = ({ video, isActive }) => {
           <LeftOverlay
             userId={video?.userId?.toString()}
             title={video?.title}
-            desc={video?.description!}
+            desc={video?.description ?? ""}
           />
           <RightOverlay likes={video?.likes} comments={video?.commentsCount} />
         </div>
