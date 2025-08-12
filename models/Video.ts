@@ -56,9 +56,9 @@ const VideoSchema: Schema<VideoInterface> = new Schema(
       default: [],
     },
     commentsCount: {
-      type: Number,
-      default: 0,
-      min: 0,
+      type: [Schema.Types.ObjectId],
+      ref: "User", // References users who liked the video
+      default: [],
     },
     transformation: {
       width: { type: Number },
