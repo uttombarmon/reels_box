@@ -93,7 +93,7 @@ export default function Home() {
             {/* "No more content" message */}
             {!hasMore && !loading && videos.length > 0 && (
               <div className="flex items-center justify-center h-20 dark:text-gray-400 text-gray-700">
-                You've reached the end!
+                You&apos;ve reached the end!
               </div>
             )}
           </div>

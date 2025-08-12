@@ -6,12 +6,7 @@ if (!mongodbUri) {
   throw new Error("Please provide a MongoDB URI");
 }
 
-declare global {
-  var mongoose: { conn: any; promise: Promise<any> | null } | undefined;
-}
-
 let cached = global.mongoose;
-
 if (!cached) {
   cached = global.mongoose = { conn: null, promise: null };
 }
