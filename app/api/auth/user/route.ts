@@ -40,23 +40,33 @@ export async function POST(req: NextRequest) {
     );
   }
 }
-export async function GET(req: NextRequest) {
-  const session = await auth();
-  const uid = req.nextUrl.searchParams.get("uid");
-
-  if (!uid) {
-    return NextResponse.json({ error: "User ID is required" }, { status: 400 });
-  }
-  const post = req.nextUrl.searchParams.get("post");
-  console.log("Post parameter:", post);
-
-  const publicparams = req.nextUrl.searchParams.get("public") || undefined;
-
-  // console.log(uid);
+export async function GET(req: NextRequest, res: NextResponse) {
   try {
+    console.log("Fetching user data");
+    const userAuth = await auth();
+    console.log("Session data:", userAuth);
+    const uid = req.nextUrl.searchParams.get("uid");
+
+    if (!uid) {
+      return NextResponse.json(
+        { error: "User ID is required" },
+        { status: 400 }
+      );
+    }
+    const post = req.nextUrl.searchParams.get("post");
+
+    const publicparams = req.nextUrl.searchParams.get("public") || undefined;
+
+    // console.log(uid);
     await dbConnect();
-    // console.log(connected);
-    if (post) {
+    if (userAuth && uid === userAuth?.user?.id.toString()) {
+      console.log("Fetching authenticated user data2");
+      const user = await User.findById(uid).select({
+        password: 0,
+      });
+      return NextResponse.json(user, { status: 200 });
+    }
+    if (post && post !== null) {
       console.log("Fetching user with posts");
       const user = await User.findById(uid).select({
         password: 0,
@@ -86,11 +96,9 @@ export async function GET(req: NextRequest) {
       };
       return NextResponse.json(user, { status: 200 });
     }
-    if (uid === session?.user?.id) {
-      const user = await User.findById(uid);
-      return NextResponse.json(user, { status: 200 });
-    }
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   } catch (error) {
+    console.log("Error fetching user data:", error);
     console.log(error);
     return NextResponse.json(
       { error: "Failed to fetch user" },

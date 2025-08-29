@@ -1,3 +1,5 @@
+import LogInButton from "@/components/shared/LogInButton";
+import LogOutButton from "@/components/shared/LogOutButton";
 import {
   Popover,
   PopoverContent,
@@ -14,6 +16,7 @@ import {
   SidebarMenuItem,
   SidebarTrigger,
 } from "@/components/ui/sidebar";
+import { auth } from "@/lib/auth";
 import {
   Compass,
   Home,
@@ -58,7 +61,8 @@ const items = [
     icon: Settings,
   },
 ];
-const NavViewXL = () => {
+const NavViewXL = async () => {
+  const userAuth = await auth();
   return (
     <Sidebar collapsible="icon">
       <div className=" w-full flex justify-end">
@@ -69,7 +73,7 @@ const NavViewXL = () => {
           <SidebarGroupLabel>REELSBOX</SidebarGroupLabel>
           <div className=" px-2 my-4 text-2xl w-full">
             <Popover>
-              <PopoverTrigger className=" flex justify-start w-[16rem] gap-2 items-center">
+              <PopoverTrigger className=" flex justify-start w-[14rem] gap-2 items-center">
                 <SearchIcon /> Search
               </PopoverTrigger>
               <PopoverContent className=" ">
@@ -91,6 +95,9 @@ const NavViewXL = () => {
               ))}
             </SidebarMenu>
           </SidebarGroupContent>
+          <div className=" w-[14rem]">
+            {userAuth ? <LogOutButton /> : <LogInButton />}
+          </div>
         </SidebarGroup>
       </SidebarContent>
     </Sidebar>

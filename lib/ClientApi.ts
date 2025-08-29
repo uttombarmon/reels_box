@@ -1,3 +1,4 @@
+import { PostInterface } from "./../types/Post";
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { ReelsUserI } from "@/types/ReelsUser";
 import { UserPublic } from "@/types/UserPublic";
@@ -28,7 +29,6 @@ class ApiClient {
       headers: defaultHeaders,
       body: body ? JSON.stringify(body) : undefined,
     });
-
     if (!response.ok) {
       throw new Error(await response.text());
     }
@@ -71,8 +71,8 @@ class ApiClient {
       method: "DELETE",
     });
   }
-  async GetPosts() {
-    return this.myFetch("/posts");
+  async GetPosts(userId: string) {
+    return this.myFetch<PostInterface[]>("/posts?userId=" + userId);
   }
   async GetAPost(id: string) {
     return this.myFetch(`/posts/${id}`);

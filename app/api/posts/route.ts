@@ -1,10 +1,25 @@
+import { auth } from "@/lib/auth";
 import { dbConnect } from "@/lib/db";
 import Post from "@/models/Post";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
-export async function GET() {
+export async function GET(req: NextRequest) {
   try {
     await dbConnect;
+    const authUser = await auth();
+    const userId = req.nextUrl.searchParams.get("userId");
+    if (authUser?.user?.id === userId) {
+      const posts = await Post.find({ userId: userId });
+      if (!posts || posts.length === 0) {
+        return NextResponse.json(
+          { message: "No posts found" },
+          { status: 404 }
+        );
+      }
+      console.log(posts);
+      return NextResponse.json(posts, { status: 200 });
+    }
+
     const posts = await Post.find();
     if (!posts || posts.length === 0) {
       return NextResponse.json({ message: "No posts found" }, { status: 404 });
